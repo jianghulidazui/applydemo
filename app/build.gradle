@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+//com.hc.gradle为resources/META-INF/gradle-plugins
+//下的properties文件名称
+apply plugin: 'com.tru.test.PluginImpl'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.applydemo"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven {//本地Maven仓库地址
+            url uri('C:\\repo')
+        }
+    }
+    dependencies {
+        //格式为-->group:module:version
+        classpath 'com.tru.plugin:myplugin:1.0.0'
+        classpath 'com.android.tools.build:gradle:3.4.0'
+    }
+}
+

@@ -1,0 +1,30 @@
+apply plugin:'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile "com.android.tools.build:gradle:3.4.0"
+    compile 'org.javassist:javassist:3.20.0-GA'
+}
+repositories {
+    jcenter()
+}
+
+//group和version在后面使用自定义插件的时候会用到
+group='com.tru.plugin'
+version='1.0.0'
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //提交到远程服务器：
+            // repository(url: "http://****/repos") {
+            //    authentication(userName: "***", password: "***")
+            // }
+            //本地的Maven地址设置为D:/repos
+            repository(url: uri('C:\\repo'))
+        }
+    }
+}
