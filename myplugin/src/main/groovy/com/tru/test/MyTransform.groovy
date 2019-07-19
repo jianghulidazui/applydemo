@@ -11,9 +11,11 @@ import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation;
 import com.android.build.api.transform.TransformOutputProvider;
 import com.android.build.gradle.internal.pipeline.TransformManager
+import javassist.ClassPool
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
+import com.tru.test.ClassAppender
 
 import java.io.IOException;
 import java.util.Collection;
@@ -82,12 +84,22 @@ public class MyTransform extends Transform {
                    Collection<TransformInput> referencedInputs,
                    TransformOutputProvider outputProvider, boolean isIncremental)
             throws IOException, TransformException, InterruptedException {
+
+        //step1:将所有类的路径加入到ClassPool中
+        ClassPool classPool = new ClassPool()
+        project.android.bootClasspath.each {
+            classPool.appendClassPath((String) it.absolutePath)
+        }
+
+        //TODO 这里有优化的空间,实际上只要将我们需要的类加进去即可
+        ClassAppender.appendAllClasses(inputs, classPool)
+
         // Transform的inputs有两种类型，一种是目录，一种是jar包，要分开遍历
         inputs.each { TransformInput input ->
             //对类型为“文件夹”的input进行遍历
             input.directoryInputs.each { DirectoryInput directoryInput ->
                 //文件夹里面包含的是我们手写的类以及R.class、BuildConfig.class以及R$XXX.class等
-                MyInject.injectDir(directoryInput.file.absolutePath,"com\\example\\applydemo")
+                MyInject.injectDir(directoryInput.file.absolutePath,"com\\example\\applydemo", project, classPool)
                 // 获取output目录
                 def dest = outputProvider.getContentLocation(directoryInput.name,
                         directoryInput.contentTypes, directoryInput.scopes,

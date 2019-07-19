@@ -1,7 +1,9 @@
 package com.example.applydemo;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,4 +17,11 @@ public class MainActivity extends AppCompatActivity {
         Log.e("--->", "===================");
         Log.e("--->", "hello father is : " + hello.getClass().getSuperclass().getSimpleName());
     }
+
+    @NonNull
+    @Override
+    public AppCompatDelegate getDelegate() {
+        return super.getDelegate();
+    }
+
 }

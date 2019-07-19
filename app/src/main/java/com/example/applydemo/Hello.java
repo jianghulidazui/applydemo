@@ -1,5 +1,5 @@
 package com.example.applydemo;
 
-public class Hello {
+public class Hello extends Parent{
     Parent parent;
 }
